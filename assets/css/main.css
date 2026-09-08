@@ -65,10 +65,9 @@ h4 { font-size: var(--fs-2); }
 .dark .link { color: var(--on-dark); border-color: var(--on-dark-line); }
 
 /* Header: a floating bar that condenses on scroll. */
-.site-header { position: sticky; top: 0; z-index: 40; padding: 0.9rem var(--gutter); transition: padding var(--dur-fast) var(--ease-soft); }
-.header-inner { width: min(100%, var(--max)); margin-inline: auto; display: flex; align-items: center; gap: var(--space-5); height: 3.6rem; padding: 0 0.6rem 0 1.1rem; border-radius: var(--r-pill); background: rgba(247,248,246,0.72); border: 1px solid rgba(15,26,43,0.08); backdrop-filter: blur(18px) saturate(160%); -webkit-backdrop-filter: blur(18px) saturate(160%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.6); transition: background-color var(--dur-fast), box-shadow var(--dur-fast); }
-.site-header.is-scrolled { padding-block: 0.5rem; }
-.site-header.is-scrolled .header-inner { box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255,255,255,0.6); }
+.site-header { position: sticky; top: 0; z-index: 40; padding: 0.9rem var(--gutter); }
+.header-inner { width: min(100%, var(--max)); margin-inline: auto; display: flex; align-items: center; gap: var(--space-5); height: 3.6rem; padding: 0 0.6rem 0 1.1rem; border-radius: var(--r-pill); background: rgba(247,248,246,0.72); border: 1px solid rgba(15,26,43,0.08); backdrop-filter: blur(18px) saturate(160%); -webkit-backdrop-filter: blur(18px) saturate(160%); box-shadow: inset 0 1px 0 rgba(255,255,255,0.6); transition: background-color var(--dur-fast), box-shadow var(--dur-fast), transform var(--dur-fast) var(--ease-soft); }
+.site-header.is-scrolled .header-inner { transform: translateY(-0.4rem); box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255,255,255,0.6); }
 .header-dark .site-header:not(.is-scrolled) .header-inner { background: rgba(15,26,43,0.4); border-color: rgba(255,255,255,0.12); color: var(--on-dark); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08); }
 .header-dark .site-header:not(.is-scrolled) .brand-word, .header-dark .site-header:not(.is-scrolled) .nav a { color: var(--on-dark); }
 .header-dark .site-header:not(.is-scrolled) .menu-toggle span { background: var(--on-dark); }
