@@ -1,0 +1,78 @@
+---
+title: Contact
+description: Request a rental appraisal and management proposal from Sure Lets & Manage, or get in touch about a tenancy. Leyton, East London.
+---
+<section class="intro">
+  <div class="wrap">
+    <h1 data-reveal>Tell us about the property.</h1>
+    <p class="lede" data-reveal style="--d:80ms">A rental appraisal is free and puts nothing on you. You get a figure, a to-do list and a written proposal, usually within two working days.</p>
+  </div>
+</section>
+
+<section class="section-tight">
+  <div class="wrap contact-grid">
+    <div class="contact-details" data-reveal>
+      <div>
+        <h3>Telephone</h3>
+        <p><a href="tel:+442081588434">+44 (0)20 8158 8434</a><br><span class="muted">Monday to Friday, 9am to 6pm</span></p>
+      </div>
+      <div>
+        <h3>Email</h3>
+        <p><a href="mailto:admin@surelets.co.uk">admin@surelets.co.uk</a></p>
+      </div>
+      <div>
+        <h3>Office</h3>
+        <p>Top Floor, 55 Coopers Lane<br>Leyton, London E10 5DG<br><span class="muted">Visits by appointment</span></p>
+      </div>
+      <div>
+        <h3>Tenants</h3>
+        <p class="muted">For repairs, use the phone number above for anything urgent. Otherwise email with the address, the problem and a photograph.</p>
+      </div>
+    </div>
+
+    <form class="form" id="enquiry-form" action="mailto:admin@surelets.co.uk" method="post" enctype="text/plain" data-to="admin@surelets.co.uk" novalidate data-reveal style="--d:80ms">
+      <div class="form-row">
+        <div class="field">
+          <label for="f-name">Your name</label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required>
+          <span class="err" data-error-for="name" hidden>Please tell us your name.</span>
+        </div>
+        <div class="field">
+          <label for="f-role">I am a</label>
+          <select id="f-role" name="role">
+            <option>Landlord</option>
+            <option>Landlord with several properties</option>
+            <option>Tenant</option>
+            <option>Something else</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required>
+          <span class="err" data-error-for="email" hidden>Please enter an email address we can reply to.</span>
+        </div>
+        <div class="field">
+          <label for="f-phone">Phone</label>
+          <input id="f-phone" name="phone" type="tel" autocomplete="tel">
+          <span class="hint">Optional</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="f-property">Property address or area</label>
+        <input id="f-property" name="property" type="text" autocomplete="off" placeholder="e.g. two-bed flat, Walthamstow E17">
+      </div>
+      <div class="field">
+        <label for="f-message">What would you like from us?</label>
+        <textarea id="f-message" name="message" rows="5" required></textarea>
+        <span class="err" data-error-for="message" hidden>A line or two is enough.</span>
+      </div>
+      <div class="form-foot">
+        <button class="btn btn-primary" type="submit">Send enquiry <svg class="ic btn-ic" aria-hidden="true"><use href="/assets/icons.svg#arrow-up-right"/></svg></button>
+        <small>Sending opens your email app with the message ready. We reply within one working day. See our <a href="/privacy/">privacy notice</a>.</small>
+      </div>
+      <p class="notice" id="form-sent" hidden>Your email app should have opened with the enquiry ready to send. If it did not, email us directly at admin@surelets.co.uk.</p>
+    </form>
+  </div>
+</section>
