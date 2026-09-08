@@ -46,7 +46,9 @@ export async function POST(request) {
   const json = (status, body) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json", "cache-control": "no-store", ...corsHeaders(request) } });
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0].trim() || "local";
   if (!limit(`chat:${ip}`, 40, 10 * 60 * 1000)) return json(429, { error: "rate_limited" });
-  if (!process.env.ANTHROPIC_API_KEY) return json(503, { error: "assistant_unavailable" });
+  // Accept the key under its proper name, or the misspelt name it was first saved under in Vercel.
+  const apiKey = process.env.ANTHROPIC_API_KEY || process.env.NTHROPIC_API_KEY;
+  if (!apiKey) return json(503, { error: "assistant_unavailable" });
   let body;
   try { body = await request.json(); } catch { return json(400, { error: "bad_json" }); }
   const mode = MODES.has(body.mode) ? body.mode : "landlord";
@@ -60,7 +62,7 @@ export async function POST(request) {
     tenant = { reference: s.ref, name: s.name, address: s.address, email: s.email, phone: s.phone };
   }
 
-  const client = new Anthropic({ maxRetries: 2, timeout: 60_000 });
+  const client = new Anthropic({ apiKey, maxRetries: 2, timeout: 60_000 });
   const ctx = { tenant, mode, photos: clean.photos, raised: [] };
   const messages = clean.messages;
   const base = {
