@@ -12,7 +12,6 @@ export const tools = [
   {
     name: "raise_repair",
     description: "Raise a maintenance job with the Sure Lets & Manage team once the fault, location, timing and access details are known. Returns a job reference to give the tenant.",
-    strict: true,
     input_schema: {
       type: "object",
       additionalProperties: false,
@@ -35,7 +34,6 @@ export const tools = [
   {
     name: "log_tenancy_question",
     description: "Pass a tenancy question, a requested change to terms, or a request to proceed with a tenancy to a member of staff.",
-    strict: true,
     input_schema: {
       type: "object",
       additionalProperties: false,
@@ -51,7 +49,6 @@ export const tools = [
   {
     name: "request_proposal",
     description: "Pass a landlord's request for a rental appraisal and management proposal to the team.",
-    strict: true,
     input_schema: {
       type: "object",
       additionalProperties: false,
