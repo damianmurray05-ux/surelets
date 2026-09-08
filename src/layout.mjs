@@ -5,6 +5,8 @@ export const site = {
   legalName: "Sure Lets and Manage Limited",
   domain: "surelets.co.uk",
   url: "https://surelets.co.uk",
+  // Where the assistant's functions run (Vercel). Empty string means same origin.
+  api: "https://surelets.vercel.app",
   phone: "+44 (0)20 8158 8434",
   phoneHref: "tel:+442081588434",
   email: "admin@surelets.co.uk",
@@ -76,6 +78,7 @@ ${meta.noindex === "true" ? '<meta name="robots" content="noindex">' : ""}
 <meta property="og:image" content="${ogImage}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0f1a2b">
+<meta name="sl-api" content="${site.api}">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -157,13 +160,13 @@ ${body}
   </div>
 </footer>
 
-<div class="chat" id="chat" hidden>
+<div class="chat" id="chat" hidden role="dialog" aria-label="Sure Lets and Manage assistant">
   <div class="chat-head">
     <div>
-      <strong>Sure Lets &amp; Manage</strong>
-      <span>Usually replies the same working day</span>
+      <strong>Sure Lets &amp; Manage assistant</strong>
+      <span id="chat-status">Landlords, tenants and repairs</span>
     </div>
-    <button type="button" class="chat-close" aria-label="Close chat">${icon("x")}</button>
+    <button type="button" class="chat-close" aria-label="Close assistant">${icon("x")}</button>
   </div>
   <div class="chat-log" id="chat-log" aria-live="polite"></div>
   <div class="chat-actions" id="chat-actions"></div>
@@ -173,6 +176,7 @@ ${body}
 </button>
 
 <script src="/assets/js/main.js" defer></script>
+<script src="/assets/js/assistant.js" defer></script>
 </body>
 </html>
 `;

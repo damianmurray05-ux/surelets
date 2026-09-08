@@ -1,0 +1,2 @@
+reference,name,email,phone,address,notes
+SL-1001,Example Tenant,tenant@example.com,+447700900000,"Flat 1, 1 Example Street, London E10 0AA",Example row: replace with real tenancies. Phone in international format.
