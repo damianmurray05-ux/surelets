@@ -276,8 +276,8 @@ body.menu-open .header-cta { visibility: hidden; }
 .group h3 { font-size: var(--fs-2); margin-bottom: 0.9rem; display: flex; gap: 0.6rem; align-items: center; }
 .group h3 .ic { color: var(--accent); }
 .group ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 0.55rem; }
-.group li { display: flex; gap: 0.6rem; font-size: var(--fs-0); line-height: 1.5; color: var(--text); }
-.group li::before { content: ""; flex: none; width: 0.35rem; height: 0.35rem; margin-top: 0.6rem; border-radius: 50%; background: var(--accent); opacity: 0.7; }
+.group li { position: relative; padding-left: 1rem; font-size: var(--fs-0); line-height: 1.5; color: var(--text); }
+.group li::before { content: ""; position: absolute; left: 0; top: 0.6rem; width: 0.35rem; height: 0.35rem; border-radius: 50%; background: var(--accent); opacity: 0.7; }
 @media (max-width: 900px) { .groups { grid-template-columns: 1fr; } }
 
 /* Fee table page */
