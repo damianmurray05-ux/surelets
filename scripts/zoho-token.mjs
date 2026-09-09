@@ -3,7 +3,7 @@
 //
 //   node scripts/zoho-token.mjs <client id> <client secret> <grant code> [dc]
 //
-// dc is eu (default), com, in, au, jp, uk or ca, matching the Zoho account.
+// dc is com (default, where this Zoho account lives), eu, in, au, jp, uk or ca.
 // Writes the three values Vercel needs to zoho.env next to this script and
 // prints nothing secret to the terminal. Paste them into Vercel as
 // ZOHO_CLIENT_ID, ZOHO_CLIENT_SECRET and ZOHO_REFRESH_TOKEN, then delete the file.
@@ -11,7 +11,7 @@ import { writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const [id, secret, code, dc = "eu"] = process.argv.slice(2);
+const [id, secret, code, dc = "com"] = process.argv.slice(2);
 if (!id || !secret || !code) {
   console.error("usage: node scripts/zoho-token.mjs <client id> <client secret> <grant code> [dc]");
   process.exit(1);

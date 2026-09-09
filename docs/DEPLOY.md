@@ -52,18 +52,20 @@ records whose name starts with an X are ignored.
 The function needs its own read-only access to the CRM. One-off setup, about
 five minutes:
 
-1. Go to <https://api-console.zoho.eu> (use `.com` if your Zoho account is on
-   the US data centre), signed in as the CRM admin. Click **Add Client**,
-   choose **Self Client**, click **Create**.
+1. Go to <https://api-console.zoho.com> (this Zoho account is on the US data
+   centre, so `.com`, not `.eu`), signed in as the CRM admin. Open the existing
+   **Self Client** created for the Marchbank portal, or **Add Client > Self
+   Client** if there is none.
 2. Copy the **Client ID** and **Client Secret** from the Client Secret tab.
-3. On the **Generate Code** tab, enter scope `ZohoCRM.modules.contacts.READ`,
+3. On the **Generate Code** tab, enter scope
+   `ZohoCRM.modules.contacts.READ,ZohoCRM.settings.fields.READ,ZohoBooks.contacts.READ,ZohoBooks.invoices.READ,ZohoBooks.settings.READ`,
    duration 10 minutes, any description, and click **Create**. Copy the code.
 4. Within ten minutes, in a terminal on this machine, run
-   `node scripts/zoho-token.mjs <client id> <client secret> <code> eu`.
-   It writes `scripts/zoho.env` with the three values.
-5. In Vercel, add `ZOHO_CLIENT_ID`, `ZOHO_CLIENT_SECRET` and
-   `ZOHO_REFRESH_TOKEN` (and `ZOHO_DC` if not `eu`), redeploy, then delete
-   `scripts/zoho.env`.
+   `node scripts/zoho-token.mjs <client id> <client secret> <code>`.
+   It writes `scripts/zoho.env` with the values Vercel needs.
+5. In Vercel, **Add Environment Variable**, paste the whole contents of
+   `scripts/zoho.env` into the Key box (Vercel splits it into the separate
+   variables), save, redeploy, then delete `scripts/zoho.env`.
 
 A Google Sheet published as CSV still works as a fallback
 (`TENANT_DIRECTORY_URL`, columns in `docs/tenant-directory-template.csv`), and

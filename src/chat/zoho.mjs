@@ -7,9 +7,9 @@
 // Environment:
 //   ZOHO_CLIENT_ID, ZOHO_CLIENT_SECRET   a Self Client from the Zoho API console
 //   ZOHO_REFRESH_TOKEN                   from scripts/zoho-token.mjs
-//   ZOHO_DC                              eu (default), com, in, au, jp, uk, ca
+//   ZOHO_DC                              com (default; the account is on the US data centre), eu, in, au, jp, uk, ca
 
-const DC = (process.env.ZOHO_DC || "eu").toLowerCase();
+const DC = (process.env.ZOHO_DC || "com").toLowerCase();
 const ACCOUNTS = `https://accounts.zoho.${DC}`;
 const API = `https://www.zohoapis.${DC}/crm/v8`;
 
