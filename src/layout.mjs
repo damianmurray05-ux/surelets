@@ -30,9 +30,10 @@ const nav = [
 const icon = (name, cls = "") =>
   `<svg class="ic ${cls}" width="20" height="20" aria-hidden="true"><use href="/assets/icons.svg#${name}"/></svg>`;
 
-// The SL mark, inline so it needs no request and inherits nothing.
-const mark = (tile = "#0f1a2b", ink = "#f7f8f6") =>
-  `<svg class="brand-mark" viewBox="0 0 64 64" width="34" height="34" aria-hidden="true"><rect width="64" height="64" rx="15" fill="${tile}"/><path d="M30 21.5C28.8 18.2 25.6 16.5 22.2 16.5C17.6 16.5 14.5 19.2 14.5 22.8C14.5 26.6 17.7 28.2 22.4 29.2C27.6 30.3 31 32 31 36.4C31 40.4 27.4 43.5 22.4 43.5C18.4 43.5 15 41.5 13.7 38.2" fill="none" stroke="${ink}" stroke-width="5.2" stroke-linecap="round"/><path d="M39.5 16.5V41" fill="none" stroke="${ink}" stroke-width="5.2" stroke-linecap="round"/><path d="M39.5 41H51" fill="none" stroke="#5b7cff" stroke-width="5.2" stroke-linecap="round"/></svg>`;
+// The SL mark, inline. The letters are set in the page's own Bricolage
+// Grotesque, so no extra request; colours are switched by CSS on dark grounds.
+const mark = () =>
+  `<svg class="brand-mark" viewBox="0 0 64 64" width="34" height="34" aria-hidden="true"><rect width="64" height="64" rx="15"/><text x="12" y="45" font-family="Bricolage Grotesque, Helvetica Neue, Arial, sans-serif" font-weight="700" font-size="37" letter-spacing="-2.5">S<tspan>L</tspan></text></svg>`;
 
 export function layout(meta, body) {
   const title = meta.title ? `${meta.title} | ${site.name}` : `${site.name} | Property management across England`;

@@ -73,8 +73,12 @@ h4 { font-size: var(--fs-2); }
 .header-dark .site-header:not(.is-scrolled) .menu-toggle span { background: var(--on-dark); }
 .brand { display: inline-flex; align-items: center; gap: 0.7rem; text-decoration: none; }
 .brand-mark { width: 2.15rem; height: 2.15rem; flex: none; border-radius: 9px; }
+.brand-mark rect { fill: var(--ink); }
+.brand-mark text { fill: var(--paper); }
+.brand-mark tspan { fill: #5b7cff; }
 .header-dark .site-header:not(.is-scrolled) .brand-mark rect, body.menu-open .brand-mark rect, .site-footer .brand-mark rect { fill: var(--paper); }
-.header-dark .site-header:not(.is-scrolled) .brand-mark path:not([stroke="#5b7cff"]), body.menu-open .brand-mark path:not([stroke="#5b7cff"]), .site-footer .brand-mark path:not([stroke="#5b7cff"]) { stroke: var(--ink); }
+.header-dark .site-header:not(.is-scrolled) .brand-mark text, body.menu-open .brand-mark text, .site-footer .brand-mark text { fill: var(--ink); }
+.header-dark .site-header:not(.is-scrolled) .brand-mark tspan, body.menu-open .brand-mark tspan, .site-footer .brand-mark tspan { fill: var(--accent); }
 .brand-word { font: 600 1.05rem/1 var(--font-display); letter-spacing: -0.02em; color: var(--ink); white-space: nowrap; }
 .brand-word .amp { color: var(--accent); font-weight: 400; }
 .nav { display: flex; gap: 0.25rem; margin-left: auto; }
