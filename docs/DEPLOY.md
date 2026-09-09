@@ -41,23 +41,33 @@ Optional:
 
 After adding variables, **Deployments > Redeploy** the latest one.
 
-## 3. The tenant directory
+## 3. The tenant directory: Zoho CRM
 
-The assistant verifies a tenant by looking up their tenancy reference and
-sending a code to the mobile or email on file. That list lives outside the
-code, in a Google Sheet you control:
+The assistant verifies a tenant by looking up the rent payment reference they
+quote in Zoho CRM, live, and sending a code to the mobile or email on that
+tenancy record. Only tenancies whose Status is current (Tenanted, Arrears,
+Possession Proceedings, Court, Let Agreed, Maintenance Only) can verify, and
+records whose name starts with an X are ignored.
 
-1. Create a Google Sheet with the columns in
-   `docs/tenant-directory-template.csv`: `reference, name, email, phone,
-   address, notes`. One row per tenancy. Phone numbers in international
-   format (`+447700900000`).
-2. **File > Share > Publish to web**, choose the sheet and **Comma-separated
-   values (.csv)**, click **Publish**, and copy the link.
-3. Paste that link as `TENANT_DIRECTORY_URL` in Vercel. Changes to the sheet
-   are picked up within five minutes.
+The function needs its own read-only access to the CRM. One-off setup, about
+five minutes:
 
-Give every tenant their reference; it is what they are asked for. The format
-`SL-1234` is a suggestion; anything unique works.
+1. Go to <https://api-console.zoho.eu> (use `.com` if your Zoho account is on
+   the US data centre), signed in as the CRM admin. Click **Add Client**,
+   choose **Self Client**, click **Create**.
+2. Copy the **Client ID** and **Client Secret** from the Client Secret tab.
+3. On the **Generate Code** tab, enter scope `ZohoCRM.modules.contacts.READ`,
+   duration 10 minutes, any description, and click **Create**. Copy the code.
+4. Within ten minutes, in a terminal on this machine, run
+   `node scripts/zoho-token.mjs <client id> <client secret> <code> eu`.
+   It writes `scripts/zoho.env` with the three values.
+5. In Vercel, add `ZOHO_CLIENT_ID`, `ZOHO_CLIENT_SECRET` and
+   `ZOHO_REFRESH_TOKEN` (and `ZOHO_DC` if not `eu`), redeploy, then delete
+   `scripts/zoho.env`.
+
+A Google Sheet published as CSV still works as a fallback
+(`TENANT_DIRECTORY_URL`, columns in `docs/tenant-directory-template.csv`), and
+is used only when the Zoho keys are absent.
 
 ## 4. Sending email
 

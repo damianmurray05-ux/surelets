@@ -147,12 +147,12 @@
       return;
     }
     setStatus("Verifying you first");
-    say("To make sure I am talking to the right person, I need your tenancy reference. It is on your tenancy agreement and on emails from us, and looks like SL-1234.");
+    say("To make sure I am talking to the right person, I need your rent payment reference. It is the reference you use when you pay your rent, and it is on your tenancy agreement and in our emails.");
     say(`If you cannot find it, ring ${PHONE} or choose "I do not have my reference".`, "sys", false);
     askReference();
   }
   function askReference(attempt = 1) {
-    ask("Tenancy reference, e.g. SL-1234", async (ref) => {
+    ask("Rent payment reference", async (ref) => {
       const stop = typing();
       try {
         const res = await post(API.verify, { action: "lookup", reference: ref });

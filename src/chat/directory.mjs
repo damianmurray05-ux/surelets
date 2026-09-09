@@ -1,10 +1,13 @@
 // The tenant directory: who holds which tenancy reference, and how to reach
-// them. Never committed to the repository. Provide it one of two ways:
-//   TENANT_DIRECTORY_URL  a CSV or JSON file the function can fetch, for
-//                         example a Google Sheet published to the web as CSV
-//   TENANT_DIRECTORY_JSON the same data inline as a JSON array
-// Columns / keys: reference, name, email, phone, address, notes (optional).
-// See docs/tenant-directory-template.csv.
+// them. Nothing is committed to the repository. Sources, in order of
+// preference:
+//   Zoho CRM   live, when ZOHO_CLIENT_ID, ZOHO_CLIENT_SECRET and
+//              ZOHO_REFRESH_TOKEN are set (see src/chat/zoho.mjs)
+//   TENANT_DIRECTORY_URL   a CSV or JSON file the function can fetch, for
+//              example a Google Sheet published to the web as CSV
+//   TENANT_DIRECTORY_JSON  the same data inline as a JSON array
+// CSV columns / keys: reference, name, email, phone, address, notes.
+import { zohoConfigured, findTenantInZoho, normalisePhone } from "./zoho.mjs";
 
 let cache = { at: 0, rows: [] };
 const TTL = 5 * 60 * 1000;
@@ -47,10 +50,11 @@ async function loadRows() {
 }
 
 export function directoryConfigured() {
-  return Boolean(process.env.TENANT_DIRECTORY_JSON || process.env.TENANT_DIRECTORY_URL);
+  return zohoConfigured() || Boolean(process.env.TENANT_DIRECTORY_JSON || process.env.TENANT_DIRECTORY_URL);
 }
 
 export async function findTenant(reference) {
+  if (zohoConfigured()) return findTenantInZoho(reference);
   const want = normaliseRef(reference);
   if (!want) return null;
   const rows = await loadRows();
@@ -61,7 +65,7 @@ export async function findTenant(reference) {
     name: row.name || "",
     firstName: (row.name || "").split(/\s+/)[0] || "there",
     email: (row.email || "").trim(),
-    phone: (row.phone || "").replace(/[\s()-]/g, ""),
+    phone: normalisePhone(row.phone),
     address: row.address || "",
     notes: row.notes || "",
   };

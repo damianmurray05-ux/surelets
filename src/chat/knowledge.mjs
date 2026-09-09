@@ -25,7 +25,7 @@ Anywhere in England. Office in London; the managed portfolio runs from London an
 - For all of these: ring +44 (0)20 8158 8434. [Out-of-hours number to be confirmed by the team.] Log the report as well so there is a record.
 
 ## Reporting a repair
-- Existing tenants verify with their tenancy reference (format SL-1234, on the tenancy agreement and on our emails) and a one-time code sent to the email or mobile number we hold.
+- Existing tenants verify with their rent payment reference (the reference they use when paying rent, for example NE236UNFLAT44, shown on the tenancy agreement and in our emails) and a one-time code sent to the mobile number or email we hold for the tenancy.
 - We need: what is wrong, where in the property, when it started, whether it is getting worse, photographs if possible, the best phone number, and when access is convenient. Contractors need access; if the tenant is out, whether we may use management keys.
 - After the report: the team reviews it the same working day, instructs a contractor, and the contractor arranges access with the tenant. Emergencies within 24 hours, urgent problems (health, safety, security, or getting worse) within a few working days, routine repairs typically within a couple of weeks. [Exact service levels to be confirmed by the team.]
 - Landlord's responsibility (Landlord and Tenant Act 1985 s11): structure and exterior, heating and hot water, water, gas and electricity installations, sanitary ware, drains, smoke and carbon monoxide alarms, and keeping the home free of hazards including damp and mould.
