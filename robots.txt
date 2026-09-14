@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://surelets.co.uk/sitemap.xml
