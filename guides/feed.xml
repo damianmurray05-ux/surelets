@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Sure Lets & Manage: guides for landlords</title>
+  <link>https://surelets.co.uk/guides/</link>
+  <atom:link href="https://surelets.co.uk/guides/feed.xml" rel="self" type="application/rss+xml"/>
+  <description>Plain answers for landlords in England from Sure Lets & Manage.</description>
+  <language>en-gb</language>
+  <item>
+    <title>How much does a letting agent cost in England in 2026?</title>
+    <link>https://surelets.co.uk/guides/letting-agent-fees-england/</link>
+    <guid isPermaLink="true">https://surelets.co.uk/guides/letting-agent-fees-england/</guid>
+    <pubDate>Mon, 14 Sep 2026 09:00:00 GMT</pubDate>
+    <category>Fees</category>
+    <description>Typical letting agent fees in England for let only, rent collection and full management, the extra charges to look for, and what a fair fee should include.</description>
+  </item>
+  <item>
+    <title>How to increase rent lawfully in England in 2026</title>
+    <link>https://surelets.co.uk/guides/increase-rent-section-13/</link>
+    <guid isPermaLink="true">https://surelets.co.uk/guides/increase-rent-section-13/</guid>
+    <pubDate>Mon, 14 Sep 2026 09:00:00 GMT</pubDate>
+    <category>Renters' Rights Act</category>
+    <description>The Section 13 procedure for raising rent on a periodic tenancy in England after the Renters' Rights Act, including notice periods, the tribunal and the evidence that supports an increase.</description>
+  </item>
+  <item>
+    <title>Rent arrears: what a landlord should do in the first 30 days</title>
+    <link>https://surelets.co.uk/guides/rent-arrears-first-30-days/</link>
+    <guid isPermaLink="true">https://surelets.co.uk/guides/rent-arrears-first-30-days/</guid>
+    <pubDate>Mon, 14 Sep 2026 09:00:00 GMT</pubDate>
+    <category>Arrears</category>
+    <description>A day by day plan for handling a missed rent payment in England, from the first phone call to the point where a Section 8 notice becomes the right step.</description>
+  </item>
+  <item>
+    <title>Section 21 has gone. How landlords regain possession in 2026</title>
+    <link>https://surelets.co.uk/guides/possession-after-section-21/</link>
+    <guid isPermaLink="true">https://surelets.co.uk/guides/possession-after-section-21/</guid>
+    <pubDate>Mon, 14 Sep 2026 09:00:00 GMT</pubDate>
+    <category>Renters' Rights Act</category>
+    <description>The Section 8 grounds landlords in England now rely on after the abolition of Section 21, the notice periods, the court process and the mistakes that lose cases.</description>
+  </item>
+  <item>
+    <title>Should you self-manage your buy-to-let or use a letting agent?</title>
+    <link>https://surelets.co.uk/guides/self-manage-or-letting-agent/</link>
+    <guid isPermaLink="true">https://surelets.co.uk/guides/self-manage-or-letting-agent/</guid>
+    <pubDate>Mon, 14 Sep 2026 09:00:00 GMT</pubDate>
+    <category>Landlords</category>
+    <description>An honest comparison of self-managing a rental property in England against using a letting agent in 2026, covering time, risk, distance and what the fee actually buys.</description>
+  </item>
+  <item>
+    <title>The landlord compliance checklist for England, 2026 edition</title>
+    <link>https://surelets.co.uk/guides/landlord-compliance-checklist/</link>
+    <guid isPermaLink="true">https://surelets.co.uk/guides/landlord-compliance-checklist/</guid>
+    <pubDate>Mon, 14 Sep 2026 09:00:00 GMT</pubDate>
+    <category>Compliance</category>
+    <description>Every certificate, check and registration a private landlord in England needs before and during a tenancy in 2026, including the Renters' Rights Act changes.</description>
+  </item>
+</channel>
+</rss>
