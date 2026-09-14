@@ -42,5 +42,10 @@
       "source": "/api/(.*)",
       "destination": "/api/$1"
     }
-  ]
+  ],
+  "git": {
+    "deploymentEnabled": {
+      "gh-pages": false
+    }
+  }
 }
