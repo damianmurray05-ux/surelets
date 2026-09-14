@@ -1,5 +1,11 @@
 /* Sure Lets & Manage. Progressive enhancement only: the site works without this file. */
 (() => {
+  /* Belt and braces while GitHub finishes the www certificate: send plain http
+     visitors on our own domain to the secure address. */
+  if (location.protocol === "http:" && /(^|\.)surelets\.co\.uk$/.test(location.hostname)) {
+    location.replace("https://surelets.co.uk" + location.pathname + location.search + location.hash);
+    return;
+  }
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
