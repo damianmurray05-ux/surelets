@@ -18,7 +18,10 @@ export async function POST(request) {
   let body;
   try { body = await request.json(); } catch { return json(400, { error: "bad_json" }); }
 
-  if (!directoryConfigured()) return json(503, { error: "verification_unavailable" });
+  if (!directoryConfigured()) {
+    console.warn("directory not configured; zoho env present:", Object.keys(process.env).filter((k) => k.startsWith("ZOHO") || k.startsWith("TENANT")).join(",") || "none");
+    return json(503, { error: "verification_unavailable" });
+  }
 
   if (body.action === "lookup") {
     const t = await findTenant(body.reference);
