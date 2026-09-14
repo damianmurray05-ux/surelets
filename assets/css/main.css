@@ -492,3 +492,12 @@ body.menu-open .header-cta { visibility: hidden; }
 .aside-cta .btn-primary .btn-ic { background: rgba(15,26,43,0.08); }
 .disclaimer { font-size: var(--fs-0); color: var(--muted-2); max-width: 68ch; margin-bottom: var(--space-8); padding-top: 1.5rem; border-top: 1px solid var(--line); }
 @media (max-width: 900px) { .article { grid-template-columns: minmax(0, 1fr); } .article-body { min-width: 0; } .article-aside { position: static; } .guides-grid-3 { grid-template-columns: 1fr; } }
+
+/* Email signature builder (team page) */
+.sig-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+.field-check label { display: flex; gap: 0.6rem; align-items: flex-start; font-weight: 500; line-height: 1.4; }
+.field-check input[type="checkbox"] { margin: 0.2rem 0 0; accent-color: var(--accent); flex: none; }
+.sig-stage { background: #fff; border: 1px solid var(--line); border-radius: var(--r-card); padding: clamp(1.5rem, 3vw, 2.5rem); overflow-x: auto; }
+.caption { font-size: var(--fs-0); text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 600; margin: 0 0 0.75rem; }
+.sig-plain { white-space: pre-wrap; background: var(--white); border: 1px solid var(--line); border-radius: var(--r-input); padding: 1rem 1.1rem; font: 0.8rem/1.6 ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--text); margin: 0 0 1rem; }
+@media (max-width: 900px) { .sig-grid { grid-template-columns: 1fr; } }
