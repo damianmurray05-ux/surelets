@@ -7,6 +7,7 @@ import { readFileSync, writeFileSync, mkdirSync, readdirSync, cpSync, rmSync, ex
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { layout, site } from "./src/layout.mjs";
+import { loadGuides, guidesIndex, guidePage, latestStrip, feed } from "./src/guides.mjs";
 
 const root = dirname(fileURLToPath(import.meta.url));
 const dist = join(root, "dist");
@@ -18,6 +19,7 @@ if (existsSync(join(root, "public"))) cpSync(join(root, "public"), dist, { recur
 
 const pagesDir = join(root, "src", "pages");
 const urls = [];
+const guides = loadGuides(join(root, "src", "guides"));
 
 for (const file of readdirSync(pagesDir).filter((f) => f.endsWith(".html"))) {
   const raw = readFileSync(join(pagesDir, file), "utf8");
@@ -31,7 +33,7 @@ for (const file of readdirSync(pagesDir).filter((f) => f.endsWith(".html"))) {
   );
   const slug = file.replace(/\.html$/, "");
   const path = slug === "index" ? "/" : `/${slug}/`;
-  const html = layout({ ...meta, path, slug }, m[2]);
+  const html = layout({ ...meta, path, slug }, m[2].replace("<!-- guides:latest -->", latestStrip(guides)));
   if (slug === "404") {
     // GitHub Pages serves a root-level 404.html for missing paths.
     writeFileSync(join(dist, "404.html"), html);
@@ -42,6 +44,20 @@ for (const file of readdirSync(pagesDir).filter((f) => f.endsWith(".html"))) {
   writeFileSync(join(outDir, "index.html"), html);
   if (meta.noindex !== "true") urls.push(path);
 }
+
+// Guides: index, one page per article, RSS feed.
+mkdirSync(join(dist, "guides"), { recursive: true });
+writeFileSync(
+  join(dist, "guides", "index.html"),
+  layout({ title: "Guides for landlords in England", description: "Plain-English guides for landlords in England on fees, compliance, possession, arrears and the Renters' Rights Act, written by Sure Lets & Manage.", path: "/guides/", slug: "guides" }, guidesIndex(guides))
+);
+urls.push("/guides/");
+for (const g of guides) {
+  mkdirSync(join(dist, "guides", g.slug), { recursive: true });
+  writeFileSync(join(dist, "guides", g.slug, "index.html"), layout({ ...g, slug: `guide-${g.slug}`, article: true }, guidePage(g, guides)));
+  urls.push(g.path);
+}
+writeFileSync(join(dist, "guides", "feed.xml"), feed(guides));
 
 // sitemap + robots
 const today = new Date().toISOString().slice(0, 10);
@@ -55,4 +71,4 @@ writeFileSync(join(dist, "robots.txt"), `User-agent: *\nAllow: /\nSitemap: ${sit
 writeFileSync(join(dist, "CNAME"), `${site.domain}\n`);
 writeFileSync(join(dist, ".nojekyll"), "");
 
-console.log(`Built ${urls.length} pages -> dist/`);
+console.log(`Built ${urls.length} pages (${guides.length} guides) -> dist/`);

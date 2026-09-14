@@ -24,6 +24,7 @@ const nav = [
   ["/fees/", "Fees"],
   ["/tenants/", "Tenants"],
   ["/about/", "About"],
+  ["/guides/", "Guides"],
   ["/contact/", "Contact"],
 ];
 
@@ -40,7 +41,7 @@ export function layout(meta, body) {
   const desc = meta.description || site.description;
   const canonical = `${site.url}${meta.path}`;
   const dark = meta.header === "dark";
-  const ogImage = `${site.url}/assets/img/regents-park-terrace.1400.jpg`;
+  const ogImage = meta.image ? `${site.url}/assets/img/${meta.image}.1400.jpg` : `${site.url}/assets/img/regents-park-terrace.1400.jpg`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -71,7 +72,7 @@ export function layout(meta, body) {
 <meta name="description" content="${esc(desc)}">
 <link rel="canonical" href="${canonical}">
 ${meta.noindex === "true" ? '<meta name="robots" content="noindex">' : ""}
-<meta property="og:type" content="website">
+<meta property="og:type" content="${meta.article ? "article" : "website"}">
 <meta property="og:site_name" content="${site.name}">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
@@ -86,6 +87,7 @@ ${meta.noindex === "true" ? '<meta name="robots" content="noindex">' : ""}
 <link rel="stylesheet" href="/assets/css/tokens.css">
 <link rel="stylesheet" href="/assets/css/main.css">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+${meta.article ? `<script type="application/ld+json">${JSON.stringify(articleLd(meta, canonical, ogImage))}</script>` : ""}
 </head>
 <body class="${dark ? "header-dark" : ""}" data-page="${meta.slug}">
 <a class="skip" href="#main">Skip to content</a>
@@ -143,6 +145,7 @@ ${body}
       <a href="/about/">About</a>
       <a href="/tenants/">Tenants</a>
       <a href="/renters-rights-act/">Renters' Rights Act</a>
+      <a href="/guides/">Guides</a>
       <a href="/contact/">Contact</a>
       <a href="/complaints/">Complaints</a>
       <a href="/privacy/">Privacy</a>
@@ -181,6 +184,34 @@ ${body}
 </body>
 </html>
 `;
+}
+
+function articleLd(meta, canonical, image) {
+  return [
+    {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: meta.title,
+      description: meta.description,
+      image,
+      datePublished: meta.date,
+      dateModified: meta.updated || meta.date,
+      author: { "@type": "Organization", name: site.name, url: site.url },
+      publisher: { "@type": "Organization", name: site.name, url: site.url, logo: { "@type": "ImageObject", url: `${site.url}/brand/mark-1024.png` } },
+      mainEntityOfPage: canonical,
+      articleSection: meta.category,
+      inLanguage: "en-GB",
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Home", item: site.url + "/" },
+        { "@type": "ListItem", position: 2, name: "Guides", item: site.url + "/guides/" },
+        { "@type": "ListItem", position: 3, name: meta.title, item: canonical },
+      ],
+    },
+  ];
 }
 
 export function esc(s) {
