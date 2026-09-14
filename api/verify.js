@@ -27,7 +27,7 @@ export async function POST(request) {
     const t = await findTenant(body.reference);
     if (!t) return json(404, { error: "not_found" });
     const channels = { email: (emailConfigured() || devEcho()) && t.email ? maskEmail(t.email) : null, phone: (smsConfigured() || devEcho()) && t.phone ? maskPhone(t.phone) : null };
-    if (!channels.email && !channels.phone) return json(503, { error: "verification_unavailable" });
+    if (!channels.email && !channels.phone) return json(503, { error: "no_delivery_channel" });
     return json(200, channels);
   }
 
