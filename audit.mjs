@@ -20,6 +20,12 @@ for (const f of pages) {
   const html = readFileSync(f, "utf8");
   if (!/<title>[^<]{5,}<\/title>/.test(html)) fail(`${f}: missing title`);
   if (!/<meta name="description" content="[^"]{20,}"/.test(html)) fail(`${f}: missing description`);
+  const desc = (html.match(/<meta name="description" content="([^"]*)"/) || [])[1] || "";
+  if (desc.replace(/&amp;/g, "&").replace(/&#39;|&quot;/g, "'").length > 165) fail(`${f}: description is ${desc.length} characters, search engines cut it at about 160`);
+  if ((html.match(/<h1[\s>]/g) || []).length !== 1) fail(`${f}: needs exactly one h1`);
+  for (const m of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    try { JSON.parse(m[1]); } catch { fail(`${f}: structured data is not valid JSON`); }
+  }
   for (const m of html.matchAll(/<img\b[^>]*>/g)) if (!/\balt="/.test(m[0])) fail(`${f}: img without alt`);
   const body = html.replace(/<script[\s\S]*?<\/script>/g, "");
   if (/[–—]/.test(body)) fail(`${f}: contains an em or en dash`);
@@ -27,7 +33,8 @@ for (const f of pages) {
   for (const m of html.matchAll(/(?:href|src|srcset)="([^"]+)"/g)) {
     for (let u of m[1].split(",").map((s) => s.trim().split(" ")[0])) {
       if (!u.startsWith("/") || u.startsWith("//")) continue;
-      const [path, hash] = u.split("#");
+      const [rawPath, hash] = u.split("#");
+      const path = rawPath.split("?")[0];
       if (path) {
         const target = path.endsWith("/") ? join(dist, path, "index.html") : join(dist, path);
         if (!existsSync(target)) fail(`${f}: broken link ${u}`);

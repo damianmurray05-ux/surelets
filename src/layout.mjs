@@ -42,16 +42,31 @@ export function layout(meta, body) {
   const canonical = `${site.url}${meta.path}`;
   const dark = meta.header === "dark";
   const ogImage = meta.image ? `${site.url}/assets/img/${meta.image}.1400.jpg` : `${site.url}/assets/img/regents-park-terrace.1400.jpg`;
+  const ogAlt = meta.image ? "A property managed by Sure Lets & Manage" : "A stucco terrace of tall London town houses";
+  const is404 = meta.slug === "404";
+  // Guide pages sit under Guides in the menu.
+  const current = (href) => meta.path === href || (href !== "/" && href === "/guides/" && String(meta.path).startsWith(href));
+  // JSON inside a script element: "<" is escaped so no value can close the tag.
+  const ld = (obj) => JSON.stringify(obj).replace(/</g, "\\u003c");
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "RealEstateAgent",
+    "@id": `${site.url}/#organisation`,
     name: site.name,
     legalName: site.legalName,
+    description: site.description,
     url: site.url,
     telephone: "+442081588434",
     email: site.email,
     image: ogImage,
+    logo: `${site.url}/brand/mark-1024.png`,
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "09:00",
+      closes: "18:00",
+    },
     address: {
       "@type": "PostalAddress",
       streetAddress: "Top Floor, 55 Coopers Lane",
@@ -70,24 +85,35 @@ export function layout(meta, body) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}">
-<link rel="canonical" href="${canonical}">
+<script>document.documentElement.className="js";setTimeout(function(){if(!window.__slReveal)document.documentElement.className+=" reveal-all"},2500)</script>
+${is404 ? "" : `<link rel="canonical" href="${canonical}">`}
 ${meta.noindex === "true" ? '<meta name="robots" content="noindex">' : ""}
 <meta property="og:type" content="${meta.article ? "article" : "website"}">
-<meta property="og:site_name" content="${site.name}">
+<meta property="og:locale" content="en_GB">
+<meta property="og:site_name" content="${esc(site.name)}">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(desc)}">
-<meta property="og:url" content="${canonical}">
+${is404 ? "" : `<meta property="og:url" content="${canonical}">`}
 <meta property="og:image" content="${ogImage}">
+<meta property="og:image:alt" content="${esc(ogAlt)}">
+${meta.article ? `<meta property="article:published_time" content="${meta.date}">\n<meta property="article:modified_time" content="${meta.updated || meta.date}">` : ""}
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(title)}">
+<meta name="twitter:description" content="${esc(desc)}">
+<meta name="twitter:image" content="${ogImage}">
 <meta name="theme-color" content="#0f1a2b">
 <meta name="sl-api" content="${site.api}">
-<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/icon-96.png" type="image/png" sizes="96x96">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="application/rss+xml" title="${esc(site.name)}: guides for landlords" href="/guides/feed.xml">
 <link rel="preload" href="/assets/fonts/bricolage-grotesque-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/manrope-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/css/tokens.css">
 <link rel="stylesheet" href="/assets/css/main.css">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
-${meta.article ? `<script type="application/ld+json">${JSON.stringify(articleLd(meta, canonical, ogImage))}</script>` : ""}
+<script type="application/ld+json">${ld(jsonLd)}</script>
+${meta.article ? `<script type="application/ld+json">${ld(articleLd(meta, canonical, ogImage))}</script>` : ""}
 </head>
 <body class="${dark ? "header-dark" : ""}" data-page="${meta.slug}">
 <a class="skip" href="#main">Skip to content</a>
@@ -100,7 +126,7 @@ ${meta.article ? `<script type="application/ld+json">${JSON.stringify(articleLd(
     </a>
     <nav class="nav" aria-label="Primary">
       ${nav
-        .map(([href, label]) => `<a href="${href}"${meta.path === href ? ' aria-current="page"' : ""}>${label}</a>`)
+        .map(([href, label]) => `<a href="${href}"${current(href) ? ` aria-current="${meta.path === href ? "page" : "true"}"` : ""}>${label}</a>`)
         .join("\n      ")}
     </nav>
     <a class="btn btn-primary btn-sm header-cta" href="/contact/">Request a proposal ${icon("arrow-up-right", "btn-ic")}</a>
@@ -110,7 +136,7 @@ ${meta.article ? `<script type="application/ld+json">${JSON.stringify(articleLd(
   </div>
   <div class="mobile-nav" id="mobile-nav" hidden>
     <nav aria-label="Mobile">
-      ${nav.map(([href, label], i) => `<a href="${href}" style="--i:${i}">${label}</a>`).join("\n      ")}
+      ${nav.map(([href, label], i) => `<a href="${href}" style="--i:${i}"${current(href) ? ` aria-current="${meta.path === href ? "page" : "true"}"` : ""}>${label}</a>`).join("\n      ")}
       <a href="/contact/" class="btn btn-primary" style="--i:${nav.length}">Request a proposal ${icon("arrow-up-right", "btn-ic")}</a>
     </nav>
     <p class="mobile-nav-foot"><a href="${site.phoneHref}">${site.phone}</a><br><a href="mailto:${site.email}">${site.email}</a></p>
@@ -172,7 +198,7 @@ ${body}
     </div>
     <button type="button" class="chat-close" aria-label="Close assistant">${icon("x")}</button>
   </div>
-  <div class="chat-log" id="chat-log" aria-live="polite"></div>
+  <div class="chat-log" id="chat-log" role="log" aria-live="polite" aria-label="Conversation" tabindex="0"></div>
   <div class="chat-actions" id="chat-actions"></div>
 </div>
 <button type="button" class="chat-launch" id="chat-launch" aria-controls="chat" aria-expanded="false">
@@ -196,9 +222,9 @@ function articleLd(meta, canonical, image) {
       image,
       datePublished: meta.date,
       dateModified: meta.updated || meta.date,
-      author: { "@type": "Organization", name: site.name, url: site.url },
-      publisher: { "@type": "Organization", name: site.name, url: site.url, logo: { "@type": "ImageObject", url: `${site.url}/brand/mark-1024.png` } },
-      mainEntityOfPage: canonical,
+      author: { "@type": "Organization", "@id": `${site.url}/#organisation`, name: site.name, url: site.url },
+      publisher: { "@type": "Organization", "@id": `${site.url}/#organisation`, name: site.name, url: site.url, logo: { "@type": "ImageObject", url: `${site.url}/brand/mark-1024.png`, width: 1024, height: 1024 } },
+      mainEntityOfPage: { "@type": "WebPage", "@id": canonical },
       articleSection: meta.category,
       inLanguage: "en-GB",
     },

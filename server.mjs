@@ -5,7 +5,7 @@ import { join, extname, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), "dist");
-const types = { ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript", ".svg": "image/svg+xml", ".jpg": "image/jpeg", ".png": "image/png", ".woff2": "font/woff2", ".xml": "application/xml", ".txt": "text/plain" };
+const types = { ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript", ".svg": "image/svg+xml", ".jpg": "image/jpeg", ".png": "image/png", ".woff2": "font/woff2", ".xml": "application/xml", ".txt": "text/plain", ".ico": "image/x-icon", ".gif": "image/gif", ".vcf": "text/vcard", ".pdf": "application/pdf", ".webmanifest": "application/manifest+json", ".json": "application/json" };
 
 createServer(async (req, res) => {
   let path = decodeURIComponent(new URL(req.url, "http://x").pathname);

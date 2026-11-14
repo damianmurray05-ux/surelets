@@ -56,7 +56,7 @@ export function guideCard(g, { featured = false, delay = 0 } = {}) {
     <span class="eyebrow">${esc(g.category)}</span>
     <${H}>${esc(g.title)}</${H}>
     <p>${esc(g.description)}</p>
-    <span class="guide-meta"><span>${longDate(g.date)}</span><span>${g.minutes} min read</span></span>
+    <span class="guide-meta"><span>${g.updated ? `Updated ${longDate(g.updated)}` : longDate(g.date)}</span><span>${g.minutes} min read</span></span>
   </div>
 </a>`;
 }
@@ -165,11 +165,12 @@ export function feed(guides) {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
-  <title>${site.name}: guides for landlords</title>
+  <title>${esc(site.name)}: guides for landlords</title>
   <link>${site.url}/guides/</link>
   <atom:link href="${site.url}/guides/feed.xml" rel="self" type="application/rss+xml"/>
-  <description>Plain answers for landlords in England from ${site.name}.</description>
+  <description>Plain answers for landlords in England from ${esc(site.name)}.</description>
   <language>en-gb</language>
+  <lastBuildDate>${new Date(guides.map((g) => g.updated || g.date).sort().pop() + "T09:00:00Z").toUTCString()}</lastBuildDate>
 ${guides.map(item).join("\n")}
 </channel>
 </rss>
