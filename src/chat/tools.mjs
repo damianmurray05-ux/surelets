@@ -65,6 +65,30 @@ export const tools = [
   },
 ];
 
+/* One real email address or nothing. The model fills "contact" from what a
+   stranger typed, and we send a confirmation to it, so it must be a single
+   plain address: no lists, no display names, no line breaks. */
+export const cleanEmail = (v) => {
+  const e = String(v || "").trim();
+  return e.length <= 254 && /^[^@\s,;<>()"']+@[^@\s,;<>()"']+\.[a-z]{2,}$/i.test(e) ? e : "";
+};
+
+/* Text that came from the conversation and is echoed in the confirmation to
+   the person. Links are removed and the length capped so the confirmation
+   cannot be used to send someone else an advert or a phishing link from our
+   address. The team's copy keeps the full text. */
+export const safeEcho = (v, max = 300) => {
+  const t = String(v || "")
+    .replace(/\b(?:https?:\/\/|www\.)\S+/gi, "[link removed]")
+    .replace(/\b[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:com|net|org|io|uk|ru|cn|xyz)\b(?:\/\S*)?/gi, "[link removed]")
+    .replace(/\s+/g, " ")
+    .trim();
+  return t.length > max ? t.slice(0, max - 1).trimEnd() + "\u2026" : t;
+};
+
+const oneLine = (v, max = 120) => String(v || "").replace(/\s+/g, " ").trim().slice(0, max);
+const EXT = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
+
 const lines = (obj) => Object.entries(obj).filter(([, v]) => v !== undefined && v !== "").map(([k, v]) => `${k.replace(/_/g, " ")}: ${v}`).join("\n");
 
 export async function runTool(name, input, ctx) {
@@ -74,16 +98,16 @@ export async function runTool(name, input, ctx) {
     const verified = Boolean(ctx.tenant);
     const who = verified
       ? { name: ctx.tenant.name, address: ctx.tenant.address, tenancy_reference: ctx.tenant.reference, email: ctx.tenant.email, phone: ctx.tenant.phone }
-      : { name: input.reporter_name, address: input.reporter_address, email: input.reporter_email };
-    const subject = `${input.urgency === "emergency" ? "EMERGENCY " : input.urgency === "urgent" ? "URGENT " : ""}Repair ${ref}: ${input.summary}${verified ? "" : " (UNVERIFIED)"}`;
+      : { name: input.reporter_name, address: input.reporter_address, email: cleanEmail(input.reporter_email), email_as_typed: cleanEmail(input.reporter_email) ? "" : input.reporter_email };
+    const subject = `${input.urgency === "emergency" ? "EMERGENCY " : input.urgency === "urgent" ? "URGENT " : ""}Repair ${ref}: ${oneLine(input.summary)}${verified ? "" : " (UNVERIFIED)"}`;
     const text = `Repair report ${ref}\nRaised ${when} via the website assistant\nVerified: ${verified ? "yes, by one-time code" : "NO, details unchecked"}\n\n${lines(who)}\n\n${lines({ category: input.category, urgency: input.urgency, summary: input.summary, location: input.location_in_property, started: input.started, details: input.details, access: input.access, contact_phone: input.contact_phone })}\n\nPhotos attached: ${ctx.photos.length}`;
-    const attachments = ctx.photos.map((p, i) => ({ filename: `${ref}-photo-${i + 1}.jpg`, data: p.data }));
+    const attachments = ctx.photos.map((p, i) => ({ filename: `${ref}-photo-${i + 1}.${EXT[p.media_type] || "jpg"}`, data: p.data }));
     const team = await sendEmail({ to: TEAM_EMAIL, subject, text, attachments, replyTo: who.email || undefined });
     if (who.email) {
       await sendEmail({
         to: who.email,
         subject: `Your repair report ${ref}`,
-        text: `Thank you for reporting this. Your reference is ${ref}.\n\nWhat you told us: ${input.summary}\nLocation: ${input.location_in_property}\nAccess: ${input.access}\n\nThe team reviews reports the same working day and a contractor will contact you to arrange access. If the problem is dangerous or getting worse, ring ${PHONE}.\n\n${BRAND}`,
+        text: `Thank you for reporting this. Your reference is ${ref}.\n\nWhat you told us: ${safeEcho(input.summary)}\nLocation: ${safeEcho(input.location_in_property, 160)}\nAccess: ${safeEcho(input.access, 160)}\n\nThe team reviews reports the same working day and a contractor will contact you to arrange access. If the problem is dangerous or getting worse, ring ${PHONE}.\n\n${BRAND}`,
       });
     }
     await postWebhook({ type: "repair", reference: ref, raised: new Date().toISOString(), verified, reporter: who, ...input, photos: ctx.photos.length });
@@ -93,18 +117,20 @@ export async function runTool(name, input, ctx) {
   }
   if (name === "log_tenancy_question" || name === "request_proposal") {
     const kind = name === "log_tenancy_question" ? "Tenancy question" : "Proposal request";
-    const subject = `${kind} ${ref}: ${(input.property || input.summary).slice(0, 80)}`;
+    const subject = `${kind} ${ref}: ${oneLine(input.property || input.summary, 80)}`;
     const text = `${kind} ${ref}\nReceived ${when} via the website assistant\n\n${lines(input)}`;
-    const team = await sendEmail({ to: TEAM_EMAIL, subject, text, replyTo: /@/.test(input.contact) ? input.contact : undefined });
-    if (/@/.test(input.contact)) {
+    const email = cleanEmail(input.contact);
+    const team = await sendEmail({ to: TEAM_EMAIL, subject, text, replyTo: email || undefined });
+    if (email) {
       const body = name === "request_proposal"
-        ? `Thank you. Reference ${ref}.\n\nWhat we noted: ${input.property}. ${input.summary}\n\nA member of the team will be in touch to arrange the appraisal, usually the same working day. Ring ${PHONE} if you would rather talk now.\n\n${BRAND}`
-        : `Thank you. Reference ${ref}.\n\nWhat we noted: ${input.summary}\n\nA member of the team will reply, usually the same working day. Ring ${PHONE} if it is urgent.\n\n${BRAND}`;
-      await sendEmail({ to: input.contact.trim(), subject: `We have your ${kind.toLowerCase()} (${ref})`, text: body });
+        ? `Thank you. Reference ${ref}.\n\nWhat we noted: ${safeEcho(input.property, 160)}. ${safeEcho(input.summary)}\n\nA member of the team will be in touch to arrange the appraisal, usually the same working day. Ring ${PHONE} if you would rather talk now.\n\n${BRAND}`
+        : `Thank you. Reference ${ref}.\n\nWhat we noted: ${safeEcho(input.summary)}\n\nA member of the team will reply, usually the same working day. Ring ${PHONE} if it is urgent.\n\n${BRAND}`;
+      await sendEmail({ to: email, subject: `We have your ${kind.toLowerCase()} (${ref})`, text: body });
     }
     await postWebhook({ type: name, reference: ref, received: new Date().toISOString(), ...input });
     ctx.raised.push({ reference: ref, note: "A person will follow up." });
-    return `Logged. Reference ${ref}. ${team.ok ? "The team has been emailed." : "Email delivery is not configured; tell the person to also email admin@surelets.co.uk."}`;
+    if (!team.ok && !team.skipped) console.error(`${name} email failed`, team.error);
+    return `Logged. Reference ${ref}. ${team.ok ? "The team has been emailed." : team.skipped ? "Email delivery is not configured; tell the person to also email admin@surelets.co.uk." : `Email delivery failed at our end; tell the person to email admin@surelets.co.uk or ring ${PHONE} so the enquiry is not lost.`}`;
   }
   return `Unknown tool ${name}`;
 }

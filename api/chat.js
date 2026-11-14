@@ -6,51 +6,28 @@ import { systemPrompt } from "../src/chat/prompt.mjs";
 import { tools, runTool } from "../src/chat/tools.mjs";
 import { verify } from "../src/chat/crypto.mjs";
 import { limit } from "../src/chat/ratelimit.mjs";
-import { corsHeaders, preflight } from "../src/chat/cors.mjs";
+import { corsHeaders, preflight, foreignOrigin } from "../src/chat/cors.mjs";
+import { sanitise } from "../src/chat/messages.mjs";
 
 const MODEL = process.env.CHAT_MODEL || "claude-sonnet-5";
 const MODES = new Set(["repair", "repair-unverified", "tenancy", "landlord"]);
 const PHONE = "+44 (0)20 8158 8434";
 
-function sanitise(messages) {
-  if (!Array.isArray(messages) || messages.length === 0 || messages.length > 60) return null;
-  const out = [];
-  const photos = [];
-  for (const m of messages) {
-    if (m.role !== "user" && m.role !== "assistant") return null;
-    if (typeof m.content === "string") {
-      if (m.content.length > 6000) return null;
-      out.push({ role: m.role, content: m.content });
-      continue;
-    }
-    if (!Array.isArray(m.content)) return null;
-    const blocks = [];
-    for (const b of m.content) {
-      if (b.type === "text" && typeof b.text === "string" && b.text.length <= 6000) blocks.push({ type: "text", text: b.text });
-      else if (b.type === "image" && m.role === "user" && b.source?.type === "base64" && /^image\/(jpeg|png|webp)$/.test(b.source.media_type) && typeof b.source.data === "string" && b.source.data.length < 1_500_000) {
-        blocks.push({ type: "image", source: { type: "base64", media_type: b.source.media_type, data: b.source.data } });
-        if (photos.length < 4) photos.push({ data: b.source.data });
-      } else if (b.type === "tool_use" || b.type === "tool_result") blocks.push(b);
-      else return null;
-    }
-    if (!blocks.length) return null;
-    out.push({ role: m.role, content: blocks });
-  }
-  if (out[0].role !== "user") return null;
-  return { messages: out, photos };
-}
-
 export async function OPTIONS(request) { return preflight(request); }
 
 export async function POST(request) {
   const json = (status, body) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json", "cache-control": "no-store", ...corsHeaders(request) } });
+  if (foreignOrigin(request)) return json(403, { error: "forbidden_origin" });
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0].trim() || "local";
   if (!limit(`chat:${ip}`, 40, 10 * 60 * 1000)) return json(429, { error: "rate_limited" });
   // Accept the key under its proper name, or the misspelt name it was first saved under in Vercel.
   const apiKey = process.env.ANTHROPIC_API_KEY || process.env.NTHROPIC_API_KEY;
-  if (!apiKey) return json(503, { error: "assistant_unavailable" });
+  // "reason" says which of the two causes it is, so an outage can be diagnosed
+  // from outside without reading the function logs. It reveals nothing secret.
+  if (!apiKey) { console.error("assistant unavailable: no Anthropic API key in the environment"); return json(503, { error: "assistant_unavailable", reason: "no_key" }); }
   let body;
   try { body = await request.json(); } catch { return json(400, { error: "bad_json" }); }
+  if (!body || typeof body !== "object" || Array.isArray(body)) return json(400, { error: "bad_json" });
   const mode = MODES.has(body.mode) ? body.mode : "landlord";
   const clean = sanitise(body.messages);
   if (!clean) return json(400, { error: "bad_messages" });
@@ -98,7 +75,7 @@ export async function POST(request) {
     if (!reply) reply = ctx.raised.length ? `Done. Your reference is ${ctx.raised[0].reference}.` : "Sorry, I lost my thread. Could you say that again?";
   } catch (e) {
     if (e instanceof Anthropic.RateLimitError) return json(429, { error: "rate_limited" });
-    if (e instanceof Anthropic.AuthenticationError) return json(503, { error: "assistant_unavailable" });
+    if (e instanceof Anthropic.AuthenticationError || e instanceof Anthropic.PermissionDeniedError) { console.error("assistant unavailable: Anthropic rejected the API key", e.status); return json(503, { error: "assistant_unavailable", reason: "key_rejected" }); }
     if (e instanceof Anthropic.APIError) { console.error("claude api error", e.status, e.message); return json(502, { error: "upstream" }); }
     console.error("chat failed", e);
     return json(500, { error: "server" });

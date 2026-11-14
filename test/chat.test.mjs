@@ -44,6 +44,8 @@ test("prompt carries the verified tenant and the house rules", () => {
 test("cors allows our origins only", () => {
   const h = (o) => corsHeaders({ headers: new Map([["origin", o]]) });
   assert.equal(h("https://surelets.co.uk")["access-control-allow-origin"], "https://surelets.co.uk");
-  assert.equal(h("https://surelets-git-main.vercel.app")["access-control-allow-origin"], "https://surelets-git-main.vercel.app");
+  assert.equal(h("https://surelets.vercel.app")["access-control-allow-origin"], "https://surelets.vercel.app");
+  // Anyone can register a surelets-something project on vercel.app, so no wildcard.
+  assert.equal(h("https://surelets-git-main.vercel.app")["access-control-allow-origin"], undefined);
   assert.equal(h("https://evil.example")["access-control-allow-origin"], undefined);
 });
