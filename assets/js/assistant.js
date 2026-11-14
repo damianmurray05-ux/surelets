@@ -18,6 +18,8 @@
   const BASE = sameOrigin ? "" : metaBase.replace(/\/$/, "");
   const API = { chat: `${BASE}/api/chat`, verify: `${BASE}/api/verify` };
 
+  const MAX_PHOTOS = 4;      // the server keeps the first four photos of a conversation
+  const MAX_TURNS = 40;      // messages sent per request; the server refuses more than 60
   const state = load() || { mode: null, session: null, tenant: null, history: [], transcript: [] };
   let opened = false;
 
@@ -59,8 +61,15 @@
     let photos = [];
     const fileIn = f.querySelector("input[type=file]");
     if (fileIn) fileIn.addEventListener("change", async () => {
-      for (const file of [...fileIn.files].slice(0, 2 - photos.length)) photos.push(await shrink(file));
-      say(`${photos.length} photo${photos.length === 1 ? "" : "s"} attached`, "sys", false);
+      const room = Math.min(2 - photos.length, MAX_PHOTOS - photosSent());
+      if (room <= 0) { say(photosSent() >= MAX_PHOTOS ? `You have already added ${MAX_PHOTOS} photos, which is the most one report can carry. Email any others to ${EMAIL}.` : "Two photos at a time. Send these, then add more.", "sys", false); fileIn.value = ""; return; }
+      let failed = 0;
+      for (const file of [...fileIn.files].slice(0, room)) {
+        try { photos.push(await shrink(file)); } catch { failed++; }
+      }
+      fileIn.value = "";
+      if (failed) say(`${failed === 1 ? "A photo" : "Some photos"} could not be read. Try a JPEG or PNG, or email it to ${EMAIL}.`, "sys", false);
+      if (photos.length) say(`${photos.length} photo${photos.length === 1 ? "" : "s"} attached. Add a line of description and send.`, "sys", false);
     });
     f.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -83,6 +92,19 @@
     const dataUrl = c.toDataURL("image/jpeg", 0.8);
     return { media_type: "image/jpeg", data: dataUrl.split(",")[1] };
   }
+  const photosSent = () => state.history.reduce((n, m) => n + (Array.isArray(m.content) ? m.content.filter((b) => b.type === "image").length : 0), 0);
+  /* What goes to the server: the recent end of the conversation, starting on
+     one of the visitor's own messages. Photos from earlier turns are always
+     kept, because the report is raised with them attached. */
+  const outgoing = () => {
+    if (state.history.length <= MAX_TURNS) return state.history;
+    let tail = state.history.slice(-MAX_TURNS);
+    while (tail.length && tail[0].role !== "user") tail = tail.slice(1);
+    const early = state.history.slice(0, state.history.length - tail.length)
+      .flatMap((m) => (Array.isArray(m.content) ? m.content.filter((b) => b.type === "image") : []));
+    if (early.length && tail.length) tail = [{ role: "user", content: [...early, ...(Array.isArray(tail[0].content) ? tail[0].content : [{ type: "text", text: tail[0].content }])] }, ...tail.slice(1)];
+    return tail;
+  };
   const setStatus = (t) => { if (status) status.textContent = t; };
   const post = async (url, body) => {
     let r;
@@ -115,7 +137,7 @@
     actions.innerHTML = "";
     const stop = typing();
     try {
-      const res = await post(API.chat, { mode: state.mode, session: state.session, messages: state.history });
+      const res = await post(API.chat, { mode: state.mode, session: state.session, messages: outgoing() });
       stop();
       state.history.push({ role: "assistant", content: res.reply });
       say(res.reply);
@@ -129,8 +151,22 @@
       }
     } catch (e) {
       stop();
+      // The message was not answered, so take it back out: sending again must
+      // not leave two of the visitor's turns in a row.
+      state.history.pop(); save();
       if (e.status === 404 || e.status === 405 || e.status === 503 || e.status === 0 || !e.status) return offline();
-      say(e.message === "rate_limited" ? "Too many messages in a short time. Please wait a minute and try again." : "Something went wrong at our end. Please try again, or ring us if it is urgent.");
+      if (e.status === 401) {
+        // The two-hour verified session has run out. Carry on without it; the
+        // team checks the details against the file before booking anything.
+        state.session = null; state.tenant = null; save();
+        setStatus("Not verified");
+        say("Your verification has timed out, so I will carry on without it and the team will confirm your details against your file. Please send that last message again.", "sys");
+        state.mode = "repair-unverified"; save();
+        return ask("Type your reply", send, { multiline: true, photos: true });
+      }
+      say(e.message === "rate_limited" ? "Too many messages in a short time. Please wait a minute and try again."
+        : e.status === 400 || e.status === 413 ? `That message could not be sent, most likely because it or a photo was too large. Try again with a shorter message or without the photo, or email ${EMAIL}.`
+        : `Something went wrong at our end. Please try again, or ring ${PHONE} if it is urgent.`);
       ask("Type your reply", send, { multiline: true, photos: state.mode.startsWith("repair") });
     }
   }
@@ -169,8 +205,9 @@
           if (attempt < 2) { say("I could not find that reference. Check it and try once more."); askReference(attempt + 1); }
           else { say("Still no match. I can take the report without verification and the team will check it against your file, or you can ring us."); chips([["Continue without verification", () => unverified("Reference not matched.")], [`Ring ${PHONE}`, () => { window.location.href = PHONE_HREF; }]]); }
         } else if (e.status === 503) {
-          unverified("Verification is not switched on yet.");
+          unverified("I cannot check references at the moment.");
         } else if (e.status === 404 || !e.status) offline();
+        else if (e.status === 429) { say("Too many attempts in a short time. Wait a few minutes and try again, or carry on without verification."); chips([["Continue without verification", () => unverified("Reference not checked.")], [`Ring ${PHONE}`, () => { window.location.href = PHONE_HREF; }]]); }
         else { say("Something went wrong checking that. Try again in a moment."); askReference(attempt); }
       }
     }, { autocomplete: "off" });
@@ -192,7 +229,7 @@
     } catch (e) {
       stop();
       if (e.status === 503) return unverified("We could not send a code right now.");
-      say("The code could not be sent. Try the other option, or continue without verification.");
+      say(e.status === 429 ? "Several codes have already been sent. Check your inbox, including junk, and wait a few minutes before asking for another." : "The code could not be sent. Try again, or continue without verification.");
       chips([["Try again", () => sendCode(channel)], ["Continue without verification", () => unverified("Code could not be sent.")]]);
     }
   }
@@ -209,7 +246,8 @@
       } catch (e) {
         stop();
         const again = () => sendCode(state.lastChannel || "sms");
-        if (e.status === 400 && attempt < 3) { say("That code does not match. Try again."); askCode(attempt + 1); }
+        if (e.status === 400 && e.data && e.data.error === "wrong_code" && attempt < 3) { say("That code does not match. Try again."); askCode(attempt + 1); }
+        else if (e.status === 429) { say("Too many attempts on that code."); chips([["Send a new code", again], ["Continue without verification", () => unverified("Code not confirmed.")]]); }
         else if (e.status === 410) { say("That code has expired."); chips([["Send a new code", again], ["Continue without verification", () => unverified("Code expired.")]]); }
         else { say("I could not verify that code."); chips([["Send a new code", again], ["Continue without verification", () => unverified("Verification failed.")]]); }
       }
@@ -248,7 +286,8 @@
     launch.setAttribute("aria-expanded", String(open));
     launch.classList.toggle("is-open", open);
     if (open && !opened) { opened = true; restore(); }
-    if (open) { const i = $("#chat-in"); if (i) i.focus(); }
+    if (open) { const i = $("#chat-in") || $(".chip", actions) || $(".chat-close", chat); if (i) i.focus(); }
+    else if (chat.contains(document.activeElement) || document.activeElement === document.body) launch.focus();
   };
   launch.addEventListener("click", () => setOpen(chat.hidden));
   $(".chat-close", chat).addEventListener("click", () => setOpen(false));

@@ -29,7 +29,7 @@
   --white: #fdfdfc;
   --text: #182234;
   --muted: #5b6577;
-  --muted-2: #8a93a3;
+  --muted-2: #667085; /* 4.6:1 on paper. The earlier #8a93a3 was 2.9:1 and failed AA for small text */
   --line: rgba(15, 26, 43, 0.12);
   --line-strong: rgba(15, 26, 43, 0.22);
   --accent: #2f52b8;
