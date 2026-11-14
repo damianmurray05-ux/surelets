@@ -1,7 +1,8 @@
 # Going live
 
 The website is static and lives on GitHub Pages at https://surelets.co.uk
-(built by `node build.mjs`, pushed to the `gh-pages` branch). The assistant
+(built by `node build.mjs`, pushed to the `gh-pages` branch; see "Publishing
+the website" at the end). The assistant
 is two small server functions in `api/`, hosted on Vercel from the same
 repository. Vercel redeploys on every push to `main`. One-off setup, about
 twenty minutes, then nothing to maintain.
@@ -26,7 +27,7 @@ In the Vercel project, **Settings > Environment Variables**, add:
 | `ANTHROPIC_API_KEY` | From <https://console.anthropic.com> (API Keys). Create one key per site so spend is attributable | The assistant |
 | `CHAT_SECRET` | Any long random string, 32 characters or more | Signing verification codes and sessions |
 | `TENANT_DIRECTORY_URL` | See step 3 | Verifying tenants |
-| `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM` | From <https://twilio.com>; `TWILIO_FROM` is the sending number in international format | One-time codes by text (recommended default) |
+| `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, `TWILIO_FROM` | From <https://twilio.com>; `TWILIO_FROM` is the sending number in international format | One-time codes by text. Not set up: codes go by email only until these exist |
 | `RESEND_API_KEY` | From <https://resend.com> after verifying `surelets.co.uk` there | One-time codes by email, repair reports and enquiries to the team, confirmations to the person |
 
 Optional:
@@ -87,3 +88,35 @@ shown in the chat instead of being sent. Never set this on production.
 Vercel free tier covers this traffic. Anthropic is pay as you go: a typical
 conversation costs a few pence. Twilio texts are about 4p each. Resend is free
 for the first three thousand emails a month.
+
+## If the assistant says it is not available
+
+Ask it anything on the website. If it answers "The assistant is not available
+right now", open <https://surelets.vercel.app/api/chat> in a terminal:
+
+```bash
+curl -s -X POST https://surelets.vercel.app/api/chat -H 'content-type: application/json' \
+  -d '{"mode":"landlord","messages":[{"role":"user","content":"hello"}]}'
+```
+
+`"reason":"no_key"` means the `ANTHROPIC_API_KEY` variable is missing from the
+Vercel project (step 2). `"reason":"key_rejected"` means the key is there but
+Anthropic refused it: it has been revoked or the account has a problem. Create
+a new key, save it in Vercel, and redeploy.
+
+## Publishing the website
+
+Pushing `main` redeploys Vercel (the assistant, and a copy of the site at
+surelets.vercel.app). The public site on GitHub Pages is published separately,
+from the built `dist/` folder:
+
+```bash
+node build.mjs && node audit.mjs && node --test test/*.test.mjs   # all three must pass
+git clone --depth 1 --branch gh-pages https://github.com/damianmurray05-ux/surelets.git "$TMPDIR/sl-pages"
+rsync -a --delete --exclude .git dist/ "$TMPDIR/sl-pages/"
+cd "$TMPDIR/sl-pages" && git add -A && git commit -m "Publish" && git push https://github.com/damianmurray05-ux/surelets.git HEAD:gh-pages
+```
+
+Build after committing to `main`, not before: the sitemap takes each page's
+"last changed" date from the commit history. Changes appear on surelets.co.uk
+within a couple of minutes; GitHub caches pages for ten minutes.
