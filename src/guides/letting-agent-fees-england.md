@@ -3,6 +3,7 @@ title: How much does a letting agent cost in England in 2026?
 description: Typical letting agent fees in England for let only, rent collection and full management, the extra charges to look for, and what a fair fee should include.
 category: Fees
 date: 2026-09-14
+updated: 2026-11-14
 image: kitchen-navy
 points: Full management usually costs 10% to 18% of rent including VAT, more in central London || Let only is typically 8% to 12% of the first year's rent, or a fixed fee || The headline percentage matters less than the extras, so ask for the full tariff in writing || Under the Renters' Rights Act there are no fixed terms, so a renewal fee has nothing left to attach to
 ---
@@ -56,6 +57,6 @@ Anything on that list that appears as a separate line on the tariff is a reason 
 
 ## Is the fee worth it?
 
-On £1,200 a month, a 15% management fee is £180 a month or £2,160 a year, and it is tax deductible against rental income. Against that, a single mistake now costs more than it used to. A tenancy set up without the right documents can leave you unable to regain possession. Letting without a required licence can mean a rent repayment order of up to two years' rent. A rent increase served on the wrong form is void and you wait another year.
+On £1,200 a month, a 15% management fee is £180 a month or £2,160 a year, and it is tax deductible against rental income. Against that, a single mistake now costs more than it used to. A tenancy set up without the right documents can leave you unable to regain possession. Letting without a required licence can mean a rent repayment order of up to two years' rent. A rent increase served on the wrong form is void, and the higher rent waits until you have served it again properly.
 
 A good agent is not cheap and does not need to be. The question is whether the fee buys the things above, in writing, from people you can reach. For a straight comparison of our three services, see [what we charge](/fees/), or [request a proposal](/contact/) and we will send a written quote for your property within two working days.

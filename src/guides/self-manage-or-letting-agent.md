@@ -1,8 +1,9 @@
 ---
 title: Should you self-manage your buy-to-let or use a letting agent?
-description: An honest comparison of self-managing a rental property in England against using a letting agent in 2026, covering time, risk, distance and what the fee actually buys.
+description: Self-managing a rental property in England against using a letting agent in 2026: time, risk, distance and what the fee actually buys.
 category: Landlords
 date: 2026-09-14
+updated: 2026-11-14
 image: manor-house-external
 points: Self-managing suits landlords who live near the property, have time in working hours and keep up with the law || The cost of a mistake has risen faster than the cost of an agent || Rent collection is the middle option most people forget about || On £1,200 a month, full management costs about £42 a week including VAT, and it is tax deductible
 ---
@@ -18,7 +19,7 @@ Strip out the marketing and the two or three visits a year and the job is mostly
 - Knowing which certificate expires when, and renewing it before it does
 - Reconciling rent every month and acting on the day it is late
 - Keeping a written record of everything, because in England the record is the case
-- Serving the right notice on the right form when a rent increase or possession is needed, and knowing that the wrong one costs you a year
+- Serving the right notice on the right form when a rent increase or possession is needed, and knowing that the wrong one costs you months
 - Answering a pet request within 28 days with a lawful reason if the answer is no
 - Knowing that the rules changed on 1 May 2026 and what changed
 
@@ -56,11 +57,11 @@ Take a property let at £1,200 a month.
 
 Management fees are deductible against rental income, so for a higher rate taxpayer the net cost of full management on that property is around £1,300 a year, or £25 a week.
 
-Set against that the cost of getting one thing wrong. A tenancy started without the deposit prescribed information can mean a penalty of up to three times the deposit. Letting a property that needs a licence without one can mean a rent repayment order of up to twelve months' rent. A possession notice on an out-of-date form means starting again. None of these is a reason to panic. They are a reason to be honest about whether you will keep on top of it.
+Set against that the cost of getting one thing wrong. A tenancy started without the deposit prescribed information can mean a penalty of up to three times the deposit. Letting a property that needs a licence without one can mean a rent repayment order of up to two years' rent. A possession notice on an out-of-date form means starting again. None of these is a reason to panic. They are a reason to be honest about whether you will keep on top of it.
 
 ## The middle option
 
-Rent collection is the service most landlords forget exists. The agent finds the tenant, collects the rent, chases arrears from day one, sends the statements and serves the Section 13 notice each year. You keep the repairs, the inspections and the relationship with the property. It suits landlords who live near the property but do not want to chase money, and it costs a third less than full management. Our [fees page](/fees/) sets out the three options side by side.
+Rent collection is the service most landlords forget exists. The agent finds the tenant, collects the rent, chases arrears from day one, sends the statements and serves the Section 13 notice each year. You keep the repairs, the inspections and the relationship with the property. It suits landlords who live near the property but do not want to chase money, and it costs over a quarter less than full management. Our [fees page](/fees/) sets out the three options side by side.
 
 ## Questions to ask any agent, including us
 

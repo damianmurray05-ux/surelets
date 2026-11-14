@@ -1,7 +1,9 @@
 // What the assistant knows about Sure Lets & Manage. Plain text, read by the
 // model on every conversation. Edit freely; keep it true. Anything in
 // [square brackets] is not yet confirmed: the assistant says the team will
-// confirm it rather than guess.
+// confirm it rather than guess. The legal position was last checked against
+// gov.uk on 14 November 2026; keep it in step with src/guides and the
+// Renters' Rights Act page. Never put a real tenant's reference in here.
 
 export const knowledge = `
 ## Sure Lets & Manage
@@ -25,7 +27,7 @@ Anywhere in England. Office in London; the managed portfolio runs from London an
 - For all of these: ring +44 (0)20 8158 8434. [Out-of-hours number to be confirmed by the team.] Log the report as well so there is a record.
 
 ## Reporting a repair
-- Existing tenants verify with their rent payment reference (the reference they use when paying rent, for example NE236UNFLAT44, shown on the tenancy agreement and in our emails) and a one-time code sent to the mobile number or email we hold for the tenancy.
+- Existing tenants verify with their rent payment reference (the short code of letters and numbers they quote when paying rent, shown on the tenancy agreement and in our emails) and a one-time code sent to the email address we hold for the tenancy. Codes are sent by email only at present. Never suggest or guess a reference for someone.
 - We need: what is wrong, where in the property, when it started, whether it is getting worse, photographs if possible, the best phone number, and when access is convenient. Contractors need access; if the tenant is out, whether we may use management keys.
 - After the report: the team reviews it the same working day, instructs a contractor, and the contractor arranges access with the tenant. Emergencies within 24 hours, urgent problems (health, safety, security, or getting worse) within a few working days, routine repairs typically within a couple of weeks. [Exact service levels to be confirmed by the team.]
 - Landlord's responsibility (Landlord and Tenant Act 1985 s11): structure and exterior, heating and hot water, water, gas and electricity installations, sanitary ware, drains, smoke and carbon monoxide alarms, and keeping the home free of hazards including damp and mould.
@@ -35,23 +37,24 @@ Anywhere in England. Office in London; the managed portfolio runs from London an
 ## Tenancies (England, from 1 May 2026 under the Renters' Rights Act 2025)
 - All tenancies are periodic assured tenancies rolling monthly. No fixed terms. Existing fixed terms converted automatically.
 - The tenant may end the tenancy with two months' written notice at any time.
-- The landlord may only seek possession on a statutory ground under Section 8 (for example selling, moving in, serious arrears, antisocial behaviour) with the proper notice, and cannot use the selling or moving-in grounds in the first twelve months. Section 21 no longer exists.
+- The landlord may only seek possession on a statutory ground under Section 8 (for example selling, moving in, serious arrears, antisocial behaviour) with the proper notice, which for private landlords is Form 3A. A notice on the selling or moving-in grounds needs four months and cannot take effect in the first twelve months of the tenancy. Section 21 no longer exists.
 - Rent is paid monthly in advance by standing order. Rent in advance is limited to one month. We advertise a rent and do not accept offers above it.
-- Rent may be increased once a year by a Section 13 notice giving at least two months' notice; the tenant can challenge it at the First-tier Tribunal before it takes effect.
-- Deposit: at most five weeks' rent, protected in a government-approved scheme within 30 days, with the prescribed information given to the tenant. [Which scheme is used to be confirmed.]
+- Rent may be increased once a year by a Section 13 notice on Form 4A giving at least two months' notice. The tenant can challenge it at the First-tier Tribunal before the new rent starts; applying costs £47 and the tribunal cannot set the rent higher than the figure in the notice. Rent review clauses in agreements have no effect.
+- Deposit: at most five weeks' rent (six weeks where the annual rent is £50,000 or more), protected in a government-approved scheme within 30 days, with the prescribed information given to the tenant. [Which scheme is used to be confirmed.]
 - Holding deposit: at most one week's rent, refunded or credited to the first payment.
 - Permitted payments only: rent, deposit, holding deposit, reasonable costs for lost keys, late rent interest after 14 days, and changes requested by the tenant. No admin fees.
 - Pets: the tenant may ask in writing; we respond within 28 days and can only refuse for a reasonable ground.
 - Inspections: every six months, with at least 24 hours' written notice, at a reasonable time, photographs shared with the tenant.
 - Referencing: identity, right to rent, income or a guarantor, and a previous landlord reference where there is one. We do not refuse applicants because they have children or receive benefits.
-- Documents given at the start: tenancy agreement, How to Rent guide, EPC, gas safety certificate, electrical safety report, deposit protection certificate and prescribed information, and any licence details.
+- Documents given at the start: the tenancy agreement, which is the written statement of terms the law requires before a tenancy begins, the EPC, gas safety certificate, electrical safety report, deposit protection certificate and prescribed information, and any licence details. The government's How to Rent guide was withdrawn on 1 May 2026 and is no longer part of the pack. Tenancies that began before 1 May 2026 were due the government's Renters' Rights Act Information Sheet by 31 May 2026. [Whether a particular tenant was sent it is for the team to confirm.]
 - Bills: unless the agreement says otherwise the tenant pays council tax, gas, electricity, water, broadband and TV licence, and insures their own belongings.
 - Ending the tenancy: two months' notice in writing from the tenant; check-out inspection against the inventory; deposit returned within 10 days of agreeing deductions; disputes go to the scheme's free adjudication.
-- Complaints: in writing to admin@surelets.co.uk; acknowledged within three working days, full reply within fifteen working days; then review by a director; then the Property Redress Scheme, free to use, within twelve months of our final response.
-- The national landlord database opens from late 2026 and a private rented sector ombudsman is expected in 2028.
+- Complaints: in writing to admin@surelets.co.uk; acknowledged within three working days, full reply within fifteen working days; then review by a director; then the Property Redress Scheme, which is free to use, once we have given our final response or eight weeks have passed since the complaint was made. The scheme asks to be contacted within twelve months of the last correspondence about the complaint.
+- The landlord register (the government's Register your rental property service) opens region by region from 15 December 2026, starting with the West Midlands, and every landlord must be registered by 14 November 2027. A private rented sector ombudsman is expected from 2028.
 
 ## Landlords
 - The assistant may explain the three services and the published fees above, because they are on the website. It must not negotiate, discount, or quote for portfolios; those are agreed in writing after an appraisal.
 - To request a proposal the team needs: the landlord's name, email or phone, the property address or area, the type and size of property, how it is currently let (with an agent, self managed, vacant, or being bought), and which service interests them.
+- Dates landlords ask about. The landlord register opens on 15 December 2026 in the West Midlands, then East of England (15 January 2027), East Midlands (15 February), South East (15 March), Yorkshire and the Humber (15 April), North West (15 May), North East (15 June), London (15 July) and South West (15 August); each region has three months to register, everyone must be registered by 14 November 2027, and the government's fee is £65 per property per year. EPC C is confirmed for all private rentals by 1 October 2030 with a £10,000 cost cap, though the regulations are still to be made. The Decent Homes Standard applies to private rentals from 2035. A consultation on extending Awaab's Law to private rentals closes on 18 December 2026. Rent repayment orders can now be for up to two years' rent. For anything more detailed, point to the guides at surelets.co.uk/guides/ and offer to pass the question to the team.
 - Landlords with arrears: we take over the file, serve the correct notices under Section 8 and prepare the case. Litigation support is available through our sister practice, Marchbank & Vale Associates, which is not a firm of solicitors.
 `;

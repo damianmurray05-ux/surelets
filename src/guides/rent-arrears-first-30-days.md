@@ -3,6 +3,7 @@ title: Rent arrears: what a landlord should do in the first 30 days
 description: A day by day plan for handling a missed rent payment in England, from the first phone call to the point where a Section 8 notice becomes the right step.
 category: Arrears
 date: 2026-09-14
+updated: 2026-11-14
 image: leyton-terrace-b
 points: Contact the tenant the day the rent is missed, in writing, and keep every message || Offer a repayment plan early. Most arrears that are caught in week one never reach a notice || Do not use the deposit, change the locks, or withhold repairs. All three make the position worse || By day 30, decide between a plan that is working and a Section 8 notice on grounds 8, 10 and 11
 ---
@@ -26,7 +27,7 @@ If the tenant is in genuine difficulty, offer a written repayment plan: the norm
 
 Two things worth knowing at this stage.
 
-- **Universal Credit.** If the tenant receives Universal Credit, the housing element can be paid direct to the landlord once arrears reach two months' rent, and in some cases sooner. Apply through the managed payment to landlord process. The tenant's consent is not required once the threshold is met.
+- **Universal Credit.** If the tenant receives Universal Credit, the housing element can be paid direct to the landlord once arrears reach two months' rent, and in some cases sooner. Apply through the managed payment to landlord process. The tenant's consent is not required once the threshold is met, though they are told and have a few days to object.
 - **Late payment interest.** If the tenancy agreement provides for it, interest can be charged on rent more than 14 days late at up to 3% above the Bank of England base rate. It rarely changes behaviour, but it is a permitted payment and it belongs in the arrears schedule.
 
 ## Day 14: formal letter
@@ -35,7 +36,7 @@ If nothing has been agreed, send a formal arrears letter. It should set out the 
 
 ## Things not to do at any point
 
-- **Do not use the deposit.** It cannot be drawn on during the tenancy, and a demand that the tenant top it up is a breach of the scheme rules.
+- **Do not use the deposit.** It is held against the end of the tenancy and cannot be drawn on while the tenancy is running.
 - **Do not change the locks, remove doors, cut off utilities or turn up repeatedly without notice.** Each is harassment or unlawful eviction under the Protection from Eviction Act 1977, a criminal offence, and gives the tenant a damages claim that will usually exceed the arrears.
 - **Do not withhold repairs.** The repairing obligation does not depend on rent being paid, and an outstanding repair becomes the tenant's counterclaim.
 - **Do not accept a lower rent informally.** If you agree a reduction, write it down as a temporary arrangement with a review date, or a court may treat the reduced figure as the rent.
@@ -46,7 +47,7 @@ By now one of two things is true.
 
 **A plan is in place and being paid.** Continue, monitor every payment and keep the schedule updated. Send a short written acknowledgement each month. If a payment is missed, go back to day 1.
 
-**No plan, or the plan has failed.** It is time to serve a Section 8 notice. At one month's arrears you cannot yet rely on the mandatory ground 8, which needs three months' arrears both at service and at the hearing. But you can serve on grounds 10 and 11, which are discretionary and only need some arrears and a pattern of late payment. Many landlords serve grounds 8, 10 and 11 together as soon as ground 8 is available, so the notice survives a last-minute part payment. The notice period for all three is four weeks.
+**No plan, or the plan has failed.** It is time to serve a Section 8 notice, on Form 3A. At one month's arrears you cannot yet rely on the mandatory ground 8, which needs three months' arrears both at service and at the hearing. But you can serve on grounds 10 and 11, which are discretionary and only need some arrears and a pattern of late payment. Many landlords serve grounds 8, 10 and 11 together as soon as ground 8 is available, so the notice survives a last-minute part payment. The notice period for all three is four weeks.
 
 Our guide to [possession after Section 21](/guides/possession-after-section-21/) covers the notice and court process from that point.
 
