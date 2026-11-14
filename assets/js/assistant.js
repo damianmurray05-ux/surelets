@@ -117,11 +117,26 @@
     return data;
   };
 
+  /* Is the assistant up? Asked once per page, before a visitor is invited to
+     type or a tenant to verify. Only a clear "unavailable" counts as down; an
+     older server that does not know the question is treated as up. */
+  let health = null;
+  const healthy = () => health || (health = post(API.chat, { ping: true }).then(() => true, (e) => !(e.status === 503 || e.status === 404 || e.status === 405 || !e.status)));
+  const whenHealthy = (fn) => async () => {
+    const stop = typing();
+    const ok = await healthy();
+    stop();
+    if (ok) fn(); else { health = null; offline(); }
+  };
+
   /* Fallback when the assistant cannot be reached: the transcript so far is
      handed to the visitor's email app, so nothing they typed is lost. */
   const offline = () => {
     setStatus("Assistant offline");
-    say(`The assistant is not available right now. You can ring ${PHONE}, or send what you have written so far by email and a person will pick it up.`);
+    const typed = state.transcript.filter((m) => m.who === "me").length > 1;
+    say(typed
+      ? `The assistant is not available right now. You can ring ${PHONE}, or send what you have written so far by email and a person will pick it up.`
+      : `The assistant is not available right now. Ring ${PHONE} or email ${EMAIL} and a person will help. For a repair, include the address, what is wrong and a photograph.`);
     const text = state.transcript.filter((m) => m.who === "me").map((m) => m.text).join("\n");
     const href = `mailto:${EMAIL}?subject=${encodeURIComponent("Enquiry via surelets.co.uk")}&body=${encodeURIComponent(text + "\n\nSent from the assistant on surelets.co.uk")}`;
     actions.innerHTML = `<a class="btn btn-primary btn-sm" href="${href}">Send by email</a><a class="btn btn-ghost btn-sm" href="${PHONE_HREF}">Ring ${PHONE}</a>`;
@@ -262,9 +277,9 @@
 
   /* --- Entry points --- */
   const openers = {
-    landlord: () => { setStatus("Landlord enquiries"); begin("landlord", "Tell me about the property: where it is, what it is, and how it is let at the moment. I can explain the services and fees, and set up a free appraisal."); },
-    tenancy: () => { setStatus("Tenancy questions"); begin("tenancy", "Happy to help. Are you renting with us already, or thinking about it? Tell me what you would like to know."); },
-    repair: startRepair,
+    landlord: whenHealthy(() => { setStatus("Landlord enquiries"); begin("landlord", "Tell me about the property: where it is, what it is, and how it is let at the moment. I can explain the services and fees, and set up a free appraisal."); }),
+    tenancy: whenHealthy(() => { setStatus("Tenancy questions"); begin("tenancy", "Happy to help. Are you renting with us already, or thinking about it? Tell me what you would like to know."); }),
+    repair: whenHealthy(startRepair),
   };
   function start() {
     setStatus("Landlords, tenants and repairs");
