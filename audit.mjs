@@ -9,7 +9,7 @@ const pages = [];
 (function walk(d) {
   for (const f of readdirSync(d)) {
     const p = join(d, f);
-    statSync(p).isDirectory() ? walk(p) : p.endsWith(".html") && pages.push(p);
+    statSync(p).isDirectory() ? walk(p) : p.endsWith(".html") && !/\/google[0-9a-f]+\.html$/.test(p) && pages.push(p); // Google's verification file is not a page
   }
 })(dist);
 
