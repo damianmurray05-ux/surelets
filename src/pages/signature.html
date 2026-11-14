@@ -70,6 +70,7 @@ noindex: true
         <li><strong>The buttons</strong> are real links: a proposal request for landlords, the repair reporter for tenants, and a contact card that saves our number and address to their phone.</li>
         <li><strong>The footer</strong> carries the disclosures a limited company has to make on business email, the redress scheme and ICO registrations, and a short confidentiality line. It links to the privacy notice.</li>
         <li><strong>No web fonts.</strong> Email clients ignore them, so the text is set in Helvetica or Arial and the brand font lives in the logo image.</li>
+        <li><strong>Dark mode.</strong> The logo sits on a white panel, so in a mail app set to dark mode it shows as a white strip with the logo on it. That is expected and keeps the logo readable.</li>
       </ul>
     </div>
   </div>
@@ -84,13 +85,13 @@ noindex: true
   const telHref = (s) => "tel:" + String(s).replace(/[^\d+]/g, "").replace(/^0/, "+44");
 
   const footer = () => `<table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;width:100%;max-width:560px">
-  <tr><td style="padding:16px 0 0;border-top:1px solid #e3e5e1;font-family:${FONT};font-size:10.5px;line-height:1.6;color:#8a93a3">
+  <tr><td style="padding:16px 0 0;border-top:1px solid #e3e5e1;font-family:${FONT};font-size:11px;line-height:1.6;color:#6b7484">
     <span style="color:#5b6577;font-weight:bold">Sure Lets &amp; Manage</span> is a trading name of Sure Lets and Manage Limited, registered in England and Wales, company number 16613860. Registered office: Lancaster House, Brownrigg Drive, Cramlington NE23 6UN. Property Redress Scheme member PRS058008. ICO registration ZC027659.<br>
-    This email and any attachments are confidential and intended only for the person it is addressed to. If it has reached you in error, please let us know and delete it. How we handle personal data is set out in our <a href="${SITE}/privacy/" style="color:#8a93a3;text-decoration:underline">privacy notice</a>.
+    This email and any attachments are confidential and intended only for the person it is addressed to. If it has reached you in error, please let us know and delete it. How we handle personal data is set out in our <a href="${SITE}/privacy/" style="color:#6b7484;text-decoration:underline">privacy notice</a>.
   </td></tr>
 </table>`;
 
-  const button = (href, label, dark) => `<td style="padding:0 8px 8px 0"><a href="${href}" style="display:inline-block;font-family:${FONT};font-size:11px;font-weight:bold;letter-spacing:.6px;text-transform:uppercase;color:${dark ? "#ffffff" : "#0f1a2b"};background:${dark ? "#0f1a2b" : "#e3e9fb"};padding:9px 14px;text-decoration:none;border-radius:999px;mso-padding-alt:0;white-space:nowrap">${label}</a></td>`;
+  const button = (href, label, dark) => `<td style="padding:0 8px 8px 0"><table cellpadding="0" cellspacing="0" border="0" role="presentation"><tr><td bgcolor="${dark ? "#0f1a2b" : "#e3e9fb"}" style="background:${dark ? "#0f1a2b" : "#e3e9fb"};border-radius:999px;mso-padding-alt:9px 14px"><a href="${href}" style="display:inline-block;padding:9px 14px;border-radius:999px;font-family:${FONT};font-size:11px;font-weight:bold;letter-spacing:.6px;text-transform:uppercase;color:${dark ? "#ffffff" : "#0f1a2b"};text-decoration:none;white-space:nowrap">${label}</a></td></tr></table></td>`;
 
   const signature = (d) => `<table cellpadding="0" cellspacing="0" border="0" role="presentation" style="border-collapse:collapse;font-family:${FONT};color:#0f1a2b">
   <tr><td style="padding:0 0 14px"><a href="${SITE}" style="text-decoration:none"><img src="${SITE}/signature/lockup.gif" width="320" height="88" alt="Sure Lets &amp; Manage. Residential property management." style="display:block;border:0;width:320px;height:88px"></a></td></tr>
@@ -99,8 +100,8 @@ noindex: true
     ${d.title ? `<div style="font-family:${FONT};font-size:12px;color:#5b6577;line-height:1.5">${esc(d.title)}</div>` : ""}
   </td></tr>
   <tr><td style="font-family:${FONT};font-size:12.5px;line-height:1.75;color:#5b6577">
-    <a href="tel:+442081588434" style="color:#0f1a2b;text-decoration:none">+44 (0)20 8158 8434</a>${d.mobile ? ` &nbsp;<span style="color:#c5cad3">|</span>&nbsp; <a href="${telHref(d.mobile)}" style="color:#0f1a2b;text-decoration:none">${esc(d.mobile)}</a>` : ""}<br>
-    <a href="mailto:${esc(d.email)}" style="color:#0f1a2b;text-decoration:none">${esc(d.email)}</a> &nbsp;<span style="color:#c5cad3">|</span>&nbsp; <a href="${SITE}" style="color:#2f52b8;text-decoration:none">surelets.co.uk</a><br>
+    <a href="tel:+442081588434" style="color:#0f1a2b;text-decoration:none">+44 (0)20 8158 8434</a>${d.mobile ? ` &nbsp;<span style="color:#9aa2b1" aria-hidden="true">|</span>&nbsp; <a href="${telHref(d.mobile)}" style="color:#0f1a2b;text-decoration:none">${esc(d.mobile)}</a>` : ""}<br>
+    <a href="mailto:${esc(d.email)}" style="color:#0f1a2b;text-decoration:none">${esc(d.email)}</a> &nbsp;<span style="color:#9aa2b1" aria-hidden="true">|</span>&nbsp; <a href="${SITE}" style="color:#2f52b8;text-decoration:none">surelets.co.uk</a><br>
     Top Floor, 55 Coopers Lane, Leyton, London E10 5DG
   </td></tr>
   <tr><td style="padding:14px 0 0"><table cellpadding="0" cellspacing="0" border="0" role="presentation"><tr>

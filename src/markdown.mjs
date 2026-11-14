@@ -66,7 +66,7 @@ export function render(md) {
       const rows = [];
       while (i < lines.length && /^\|/.test(lines[i])) { rows.push(cells(lines[i])); i++; }
       out.push(
-        `<div class="table-wrap"><table><thead><tr>${head.map((c) => `<th>${c}</th>`).join("")}</tr></thead><tbody>` +
+        `<div class="table-wrap" role="region" aria-label="Table, scrolls sideways on small screens" tabindex="0"><table><thead><tr>${head.map((c) => `<th>${c}</th>`).join("")}</tr></thead><tbody>` +
           rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("") +
           `</tbody></table></div>`
       );
