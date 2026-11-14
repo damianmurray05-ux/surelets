@@ -28,6 +28,23 @@ export async function POST(request) {
   let body;
   try { body = await request.json(); } catch { return json(400, { error: "bad_json" }); }
   if (!body || typeof body !== "object" || Array.isArray(body)) return json(400, { error: "bad_json" });
+  // Health check: { ping: true } asks whether the model can be reached with
+  // the configured key, without spending anything. The widget calls it before
+  // it asks a visitor to type or a tenant to verify, so nobody does that work
+  // only to be told the assistant is down.
+  if (body.ping === true) {
+    try {
+      await new Anthropic({ apiKey, maxRetries: 0, timeout: 8_000 }).models.retrieve(MODEL);
+      return json(200, { ok: true });
+    } catch (e) {
+      const rejected = e instanceof Anthropic.AuthenticationError || e instanceof Anthropic.PermissionDeniedError;
+      console.error("assistant health check failed", e?.status, rejected ? "key rejected" : e?.message);
+      // Only a refused key is a definite "down". Anything else (a slow
+      // network, a lookup hiccup) is not proof, so let the conversation try.
+      if (rejected) return json(503, { error: "assistant_unavailable", reason: "key_rejected" });
+      return json(200, { ok: true, checked: false });
+    }
+  }
   const mode = MODES.has(body.mode) ? body.mode : "landlord";
   const clean = sanitise(body.messages);
   if (!clean) return json(400, { error: "bad_messages" });
